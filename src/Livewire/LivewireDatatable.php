@@ -28,7 +28,7 @@ class LivewireDatatable extends Component
     public $model;
     public $columns;
     public $search;
-    public $sortIndex;
+    public $sort;
     public $direction;
     public $activeDateFilters = [];
     public $activeDatetimeFilters = [];
@@ -194,7 +194,7 @@ class LivewireDatatable extends Component
     public function resetTable()
     {
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sortIndex = $this->defaultSort();
+        $this->sort = $this->defaultSort();
         $this->search = null;
         $this->setPage(1);
         $this->activeSelectFilters = [];
@@ -343,7 +343,7 @@ class LivewireDatatable extends Component
             ->formatDates($this->dates)
             ->formatTimes($this->times)
             ->search($this->searchable)
-            ->sort($this->sortIndex);
+            ->sort($this->sort);
     }
 
     public function resolveAdditionalSelects($column)
@@ -499,7 +499,7 @@ class LivewireDatatable extends Component
             return;
         }
 
-        $this->sortIndex = session()->get($this->sessionStorageKey() . '_sort', $this->sortIndex);
+        $this->sort = session()->get($this->sessionStorageKey() . '_sort', $this->sort);
         $this->direction = session()->get($this->sessionStorageKey() . '_direction', $this->direction);
     }
 
@@ -519,7 +519,7 @@ class LivewireDatatable extends Component
         }
 
         session()->put([
-            $this->sessionStorageKey() . '_sort' => $this->sortIndex,
+            $this->sessionStorageKey() . '_sort' => $this->sort,
             $this->sessionStorageKey() . '_direction' => $this->direction,
         ]);
     }
@@ -566,7 +566,7 @@ class LivewireDatatable extends Component
 
     public function initialiseSort()
     {
-        $this->sortIndex = $this->defaultSort()
+        $this->sort = $this->defaultSort()
         ? $this->defaultSort()['key']
         : collect($this->freshColumns)->reject(function ($column) {
             return in_array($column['type'], Column::UNSORTABLE_TYPES) || $column['hidden'];
@@ -713,7 +713,7 @@ class LivewireDatatable extends Component
 
     public function getSortString($dbtable)
     {
-        $column = $this->freshColumns[$this->sortIndex];
+        $column = $this->freshColumns[$this->sort];
         switch (true) {
             case $column['sort']:
                 return $column['sort'];
@@ -804,14 +804,14 @@ class LivewireDatatable extends Component
             throw new \Exception("Invalid direction $direction given in sort() method. Allowed values: asc, desc.");
         }
 
-        if ($this->sortIndex === (int) $index) {
+        if ($this->sort === (int) $index) {
             if ($direction === null) { // toggle direction
                 $this->direction = ! $this->direction;
             } else {
                 $this->direction = $direction === 'asc' ? true : false;
             }
         } else {
-            $this->sortIndex = (int) $index;
+            $this->sort = (int) $index;
         }
         if ($direction !== null) {
             $this->direction = $direction === 'asc' ? true : false;
@@ -819,14 +819,14 @@ class LivewireDatatable extends Component
         $this->setPage(1);
 
         session()->put([
-            $this->sessionStorageKey() . '_sort' => $this->sortIndex,
+            $this->sessionStorageKey() . '_sort' => $this->sort,
             $this->sessionStorageKey() . '_direction' => $this->direction,
         ]);
     }
 
     public function toggle($index)
     {
-        if ($this->sortIndex == $index) {
+        if ($this->sort == $index) {
             $this->initialiseSort();
         }
 
@@ -1600,7 +1600,7 @@ class LivewireDatatable extends Component
      */
     public function addSort()
     {
-        if (isset($this->sortIndex) && isset($this->freshColumns[$this->sortIndex]) && $this->freshColumns[$this->sortIndex]['name']) {
+        if (isset($this->sort) && isset($this->freshColumns[$this->sort]) && $this->freshColumns[$this->sort]['name']) {
             if (isset($this->pinnedRecords) && $this->pinnedRecords) {
                 $this->query->orderBy(DB::raw('FIELD(id,' . implode(',', $this->pinnedRecords) . ')'), 'DESC');
             }
