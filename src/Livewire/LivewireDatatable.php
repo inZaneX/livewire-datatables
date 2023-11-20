@@ -1602,7 +1602,7 @@ class LivewireDatatable extends Component
     {
         if (isset($this->sort) && isset($this->freshColumns[$this->sort]) && $this->freshColumns[$this->sort]['name']) {
             if (isset($this->pinnedRecords) && $this->pinnedRecords) {
-                $this->query->orderBy(DB::raw('FIELD(id,' . implode(',', $this->pinnedRecords) . ')'), 'DESC');
+                $this->query->orderBy(DB::raw('FIELD(`' . $this->query->from . '`.`id`,' . implode(',', $this->pinnedRecords) . ')'), 'DESC');
             }
             $this->query->orderBy(DB::raw($this->getSortString($this->query->getConnection()->getPDO()->getAttribute(\PDO::ATTR_DRIVER_NAME))), $this->direction ? 'asc' : 'desc');
         }
