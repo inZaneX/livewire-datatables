@@ -1,5 +1,5 @@
 {
-    "name": "mediconesystems/livewire-datatables",
+    "name": "inzanex/livewire-datatables",
     "description": "Advanced datatables using Laravel, Livewire, Tailwind CSS and Alpine JS",
     "keywords": [
         "php",
