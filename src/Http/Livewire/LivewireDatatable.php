@@ -1,6 +1,6 @@
 <?php
 
-namespace Mediconesystems\LivewireDatatables\Http\Livewire;
+namespace Mediconesystems\LivewireDatatables\Livewire;
 
 use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
