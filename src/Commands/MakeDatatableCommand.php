@@ -3,8 +3,7 @@
 namespace Mediconesystems\LivewireDatatables\Commands;
 
 use Illuminate\Support\Facades\File;
-use Livewire\Commands\FileManipulationCommand;
-use Livewire\LivewireComponentsFinder;
+use Livewire\Features\SupportConsoleCommands\Commands\FileManipulationCommand;
 
 class MakeDatatableCommand extends FileManipulationCommand
 {
@@ -15,7 +14,7 @@ class MakeDatatableCommand extends FileManipulationCommand
     public function handle()
     {
         $this->parser = new ComponentParser(
-            config('livewire.class_namespace', 'App\\Http\\Livewire'),
+            config('livewire.class_namespace', 'App\\Livewire') . '\\Datatables',
             $this->argument('name'),
             $this->option('model')
         );
