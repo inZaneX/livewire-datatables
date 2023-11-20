@@ -150,6 +150,7 @@ class ColumnSet
         if ($sort && $column = $this->columns->first(function ($column) use ($sort) {
             return Str::after($column->name, '.') === Str::before($sort, '|');
         })) {
+            /** @var Column $column */
             $column->defaultSort(Str::of($sort)->contains('|') ? Str::after($sort, '|') : null);
         }
 
